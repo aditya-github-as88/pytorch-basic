@@ -1,0 +1,41 @@
+
+	1. Tensors
+	Link --> https://pytorch.org/docs/stable/torch.html
+		a. Scaler ( only magitude)
+			i. Ex: -->  Scaler = torch.tensor(7)
+			ii. Scaler.ndim ( 0 dimension)
+			iii. Scaler.item() ( 7)
+		b. Vector ( magnitude and direction)
+			i. Vector = torch.Tensor([7,7])
+			ii. Vector.ndim ( 1 dimension) ( no. Of pair Square brackets)
+			iii. Vector.shape --> torch.Size([2])
+		c. Matrix
+			i. Matrix = torch.tensor ([[7,8],
+                                 [1,1]])
+			ii. MATRIX.ndim -> 2
+			iii. Fetching elements in matrix --> MATRIX[1] --> [7,8]
+			iv. Shape of the matrix -> torch.Size([2,2])
+		d. Tensor
+			i. TENSOR = torch.tensor([[
+[1,2,3],
+[4,5,6],
+[7,8,9]
+                                          ]
+    
+                                          ])
+			ii. 3 dimension
+			iii. Shape --> 1,3,3
+			iv. TENSOR[0] --> will print the matrix above
+	
+			
+			
+
+	2. Random Tensors
+Link --> https://pytorch.org/docs/stable/generated/torch.rand.html
+
+	A. Why random tensors?
+		a. Important cos many neural networks learn is that they start with tensor full of random numbers and then adjust those random numbers to better represent the data.
+		b. ' start with random numbers --> look at data --> update random numbers --> look at data' --> update random numbers
+	B. Create random tensor of size/shape (3,4)
+		a. Random_tensor = Torch.rand(3,4)
+
