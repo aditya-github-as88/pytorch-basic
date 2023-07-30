@@ -606,11 +606,64 @@ class Tensor101(object):
             
         
         def pytorchToNumpy():
-            pass
+            tensor = torch.ones(7) # create a tensor of ones with dtype=float32
+            numpy_tensor = tensor.numpy() # will be dtype=float32 unless changed
+            
+            print('\n\n')
+            print("#######--------------<>----Pytorch to Numpy-----<>-------------###########")
+            print(f'\n Numpy Array is {numpy_tensor}')
+            print(f'\n Pytorch Tensor is {tensor}')
+            
+            print('\n\n')
+            print("#######--------------<>----Change Tensor value-----<>-------------###########")
+            tensor = tensor + 1
+            print(f'\n Now Numpy Array is {numpy_tensor}')
+            print(f'\n Now Pytorch Tensor is {tensor}')
+
         
         numpyToPytorch()
         pytorchToNumpy()
-               
+    
+    
+    def reproducibility(self):
+        """Concept of random seed and its usage in pytorch
+        """     
+        def compareTwoTensors():
+            # Create two random tensors
+            print('\n\n')
+            print("#######--------------<>----Comparing 2 random tensors-----<>-------------###########")
+            random_tensor_A = torch.rand(3, 4)
+            random_tensor_B = torch.rand(3, 4)
+
+            print(f"Tensor A:\n{random_tensor_A}\n")
+            print(f"Tensor B:\n{random_tensor_B}\n")
+            print(f"Does Tensor A equal Tensor B? (anywhere)")
+            print(f"\n",{random_tensor_A == random_tensor_B})
+        
+        def randomSeed():
+            print('\n\n')
+            print("#######--------------<>----Comparing 2 random tensors with RANDOM SEED-----<>-------------###########")
+            # # Set the random seed
+            RANDOM_SEED=0 # try changing this to different values and see what happens to the numbers below
+            torch.manual_seed(seed=RANDOM_SEED) 
+            random_tensor_C = torch.rand(3, 4)
+
+            # Have to reset the seed every time a new rand() is called 
+            # Without this, tensor_D would be different to tensor_C 
+            torch.random.manual_seed(seed=RANDOM_SEED) # try commenting this line out and seeing what happens
+            random_tensor_D = torch.rand(3, 4)
+
+            print(f"Tensor C:\n{random_tensor_C}\n")
+            print(f"Tensor D:\n{random_tensor_D}\n")
+            print(f"Does Tensor C equal Tensor D? (anywhere)\n")
+            print(random_tensor_C == random_tensor_D)
+
+        
+        compareTwoTensors()
+        randomSeed()
+
+
+
 def main():
     obj = Tensor101()
     # obj.getTensorTypes()
@@ -619,7 +672,8 @@ def main():
     # obj.getTensorManipulation()
     # obj.getTensorAggregation()
     # obj.getTensorOperations()
-    obj.pytorchfromNumpy()
+    # obj.pytorchfromNumpy()
+    obj.reproducibility()
     
         
 if __name__ == '__main__':
