@@ -1,0 +1,33 @@
+Pytorch vs Numpy
+
+Numpy algo are mainly used for
+1) K Means ( Clustering algo)
+2) Decision Tree
+
+While Pytorch is used for 
+1) Heavy Matrix computation
+2) Most commonly used for Deep Learning frameworks( used for neural networks , multiple layers( ~150))
+
+--
+Another major difference is tensors are supported by accelerator memory such as GPU( faster processing speed)
+
+why use GPU? graphic processing unit
+
+CUDA made by NVidea
+
+what is CUDA??
+Parallel computing platform and programming model that accelerates deep learning and other compute-intensive apps by taking advantage of the parallel processing power of GPUs.	
+other competotors are AMD but when CUDA combines with NVIDEA GPU, speed is fast
+
+GPU is good in computing specialized computation --> CPU is good in handling general computation
+
+speed of GPU depends upon the type of computation being performed , what kind of computation is mostly GPU used for --> parallel computation
+
+Parallel computation
+broken down into smaller cmputation --> smaller then sycnronized into single --> this again depends upon cored in the hardware( CPU may have ~8-16 cores but GPU has ~1000 of cores)
+
+role of GPU in neural networks
+ 
+ 
+ 
+ 
