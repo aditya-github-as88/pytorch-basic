@@ -22,7 +22,13 @@ def plot_predictions(train_data=None,
 
         if predictions is not None:
             # Plot the predictions in red (predictions were made on the test data)
-            plt.scatter(test_data, predictions, c="r", s=4, label="Predictions")
+            # plt.scatter(test_data, predictions, c="r", s=4, label="Predictions")
+            if isinstance(predictions,list):
+                for val,pred in enumerate(predictions):
+                    plt.scatter(test_data, pred, c="r", s=4, label=f"Predictions {val}")    
+            else:
+                plt.scatter(test_data, predictions, c="r", s=4, label="Predictions")
+            
 
         # Show the legend
         plt.legend(prop={"size": 14})
@@ -113,11 +119,20 @@ def trainingLoop():
     #set the loss function and optimzer function
     model_0.loss_fn = nn.L1Loss()
     model_0.optimizer = torch.optim.SGD(params=model_0.parameters(), # parameters of target model to optimize
-                                    lr=0.0001) # learning rate (how much the optimizer should change parameters at each step, higher=more (less stable), lower=less (might take a long time))
+                                    lr=0.01) # learning rate (how much the optimizer should change parameters at each step, higher=more (less stable), lower=less (might take a long time))
     
     epochs = 10
-    y_pred = None
+    y_preds = None
+    y_preds_new = None
     # set the epochs and pass the data through the model
+    with torch.inference_mode():
+        y_preds = model_0(X_test)
+        
+    # plot_predictions(train_data=X_train, 
+    #                  train_labels=Y_train, 
+    #                  test_data=X_test, 
+    #                  test_labels=Y_test,
+    #                  predictions=y_preds)
     for ep in range(epochs):
         
         #put the model in training mode( # default mode, updates params settings)
@@ -125,9 +140,12 @@ def trainingLoop():
         
         #1 . Forward pass on train data using forward () method -> y = mx + c
         y_pred = model_0(X_train)
+        # print(f'\n y_pred , {y_pred}')
+        
         
         # 2 . calculate the loss from predictions above
         loss = model_0.loss_fn(y_pred,Y_train)
+        print(f'\n loss , {loss}')
         
         #3. Zero the gradients
         model_0.optimizer.zero_grad()
@@ -141,11 +159,15 @@ def trainingLoop():
         # 6. Testing 
         model_0.eval()
         
+    with torch.inference_mode():
+        y_preds_new = model_0(X_test)
+        
     plot_predictions(train_data=X_train, 
                      train_labels=Y_train, 
                      test_data=X_test, 
                      test_labels=Y_test,
-                     predictions=y_pred)
+                    #  predictions=y_preds_new)
+                     predictions=[y_preds , y_preds_new])
     
 def randomModelPrediction():
     # Set manual seed since nn.Parameter are randomly initialzied
