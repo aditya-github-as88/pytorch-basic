@@ -34,6 +34,17 @@ def plot_predictions(train_data=None,
         plt.legend(prop={"size": 14})
         
         plt.show()
+        
+def plotLossCurves(epoch_count = None , train_loss_values = None , test_loss_values = None):
+    # Plot the loss curves
+    plt.plot(epoch_count, train_loss_values, label="Train loss")
+    plt.plot(epoch_count, test_loss_values, label="Test loss")
+    plt.title("Training and test loss curves")
+    plt.ylabel("Loss")
+    plt.xlabel("Epochs")
+    plt.legend()
+    plt.show()
+    
 
 class Tensor102(object):
     def __init__(self,weight = 0 , bias = 0, start = 0 , stop = 0, step = 0):
@@ -93,8 +104,8 @@ class LinearRegressionModel(nn.Module): # <- almost everything in PyTorch is a n
         # self.weights = nn.Parameter(torch.tensor(0.7))
         # self.bias = nn.Parameter(torch.tensor(0.3))
         #---------------************ideal weights**********----------------
-        self.loss_fn = None
-        self.optimizer = None
+        # self.loss_fn = None
+        # self.optimizer = None
         
     # Forward defines the computation in the model
     def forward(self, x: torch.Tensor) -> torch.Tensor: # <- "x" is the input data (e.g. training/testing features)
@@ -121,10 +132,18 @@ def trainingLoop():
     model_0.optimizer = torch.optim.SGD(params=model_0.parameters(), # parameters of target model to optimize
                                     lr=0.01) # learning rate (how much the optimizer should change parameters at each step, higher=more (less stable), lower=less (might take a long time))
     
-    epochs = 10
-    y_preds = None
-    y_preds_new = None
     # set the epochs and pass the data through the model
+    epochs = 200
+    
+    # Create empty loss lists to track values
+    train_loss_values = []
+    test_loss_values = []
+    epoch_count = []
+    
+    
+    
+    #Plot initial prediction before training model ( simple plot)
+    y_preds = None
     with torch.inference_mode():
         y_preds = model_0(X_test)
         
@@ -133,6 +152,9 @@ def trainingLoop():
     #                  test_data=X_test, 
     #                  test_labels=Y_test,
     #                  predictions=y_preds)
+    
+    
+    
     for ep in range(epochs):
         
         #put the model in training mode( # default mode, updates params settings)
@@ -144,22 +166,42 @@ def trainingLoop():
         
         
         # 2 . calculate the loss from predictions above
-        loss = model_0.loss_fn(y_pred,Y_train)
-        print(f'\n loss , {loss}')
+        train_loss = model_0.loss_fn(y_pred,Y_train)
+        # print(f'\n Train loss {loss} at epoch {ep} ')
         
         #3. Zero the gradients
         model_0.optimizer.zero_grad()
         
         #4. perform back propogation on the loss
-        loss.backward()
+        train_loss.backward()
         
         #5. step the optimizer( gradient descent)
         model_0.optimizer.step()
         
-        # 6. Testing 
-        model_0.eval()
+        ####. Testing ###
+        model_0.eval() # turns off different settings in the model not needed for evaluation | testing
         
-    with torch.inference_mode():
+        with torch.inference_mode(): # turns off gradient tracking and couple of more settings
+            #1. Do forward pass
+            test_pred = model_0(X_test)
+            
+            #2. Calculate the loss
+            test_loss = model_0.loss_fn(test_pred,Y_test) # loss against test date . ( above for training it was against training data)
+            
+        #Print out the results
+        if ep % 10 == 0:
+            epoch_count.append(ep)
+            train_loss_values.append(train_loss.detach().numpy())
+            test_loss_values.append(test_loss.detach().numpy())
+            print(f"\n Epoch : {ep} | MAE Train Loss : {train_loss} | MAE Test Loss : {test_loss}")
+    
+    
+    print(f'\n\n model_dict is {model_dict}')
+            
+    
+    # PLot after doing 100 epoch    
+    y_preds_new = None
+    with torch.inference_mode(): # turns off gradient tracking and couple of more settings
         y_preds_new = model_0(X_test)
         
     plot_predictions(train_data=X_train, 
@@ -168,6 +210,8 @@ def trainingLoop():
                      test_labels=Y_test,
                     #  predictions=y_preds_new)
                      predictions=[y_preds , y_preds_new])
+    
+    plotLossCurves(epoch_count = epoch_count , train_loss_values = train_loss_values , test_loss_values = test_loss_values)
     
 def randomModelPrediction():
     # Set manual seed since nn.Parameter are randomly initialzied
