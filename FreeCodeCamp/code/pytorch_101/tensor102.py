@@ -2,6 +2,7 @@ import torch
 import matplotlib.pyplot as plt
 import torch.nn as nn
 
+
 def plot_predictions(train_data=None, 
                      train_labels=None, 
                      test_data=None, 
