@@ -38,7 +38,7 @@ class Tensor102(object):
         plt.show()
         
 def main():
-    obj = Tensor102()
+    obj = Tensor102(samples= 100 , noise=0.01 ,random_seed=42)
     obj.createCircle()
     obj.getXY()
     obj.createDataFrame()
