@@ -1,2 +1,4 @@
 Simply learn
 https://www.simplilearn.com/10-algorithms-machine-learning-engineers-need-to-know-article#types_of_machine_learning_algorithms
+
+https://machinelearningmastery.com/a-tour-of-machine-learning-algorithms/
